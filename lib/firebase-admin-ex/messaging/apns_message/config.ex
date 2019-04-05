@@ -30,8 +30,8 @@ defmodule FirebaseAdminEx.Messaging.APNSMessage.Config do
     }
   end
 
-  def validate(%__MODULE__{headers: _, payload: nil}),
-    do: {:error, "[APNSMessage.Config] payload is missing"}
+  def validate(%__MODULE__{headers: _, payload: nil} = config),
+    do: {:ok, config}
 
   def validate(%__MODULE__{headers: _, payload: payload} = message_config) do
     case Payload.validate(payload) do

@@ -5,6 +5,7 @@ defmodule FirebaseAdminEx.Messaging.Message do
   """
 
   alias __MODULE__
+  alias FirebaseAdminEx.Errors
   alias FirebaseAdminEx.Messaging.WebMessage.Config, as: WebMessageConfig
   alias FirebaseAdminEx.Messaging.AndroidMessage.Config, as: AndroidMessageConfig
   alias FirebaseAdminEx.Messaging.APNSMessage.Config, as: APNSMessageConfig
@@ -64,6 +65,16 @@ defmodule FirebaseAdminEx.Messaging.Message do
       notification: Map.get(attributes, :notification, %{}),
       token: token
     }
+  end
+
+  def validate!(%Message{} = message) do
+    case validate(message) do
+      {:ok, message} ->
+        message
+
+      {:error, error} ->
+        raise Errors.ValidationError, error
+    end
   end
 
   def validate(%Message{data: _, token: nil}), do: {:error, "[Message] token is missing"}

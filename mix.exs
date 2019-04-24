@@ -9,9 +9,6 @@ defmodule FirebaseAdminEx.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: description(),
-      package: package(),
-      source_url: "https://github.com/scripbox/firebase-admin-ex",
-      homepage_url: "https://github.com/scripbox/firebase-admin-ex"
     ]
   end
 
@@ -34,13 +31,5 @@ defmodule FirebaseAdminEx.MixProject do
 
   defp description() do
     "The Firebase Admin Elixir SDK"
-  end
-
-  defp package do
-    [
-      licenses: ["Apache 2.0"],
-      organization: "scripbox",
-      links: %{"GitHub" => "https://github.com/scripbox/firebase-admin-ex"}
-    ]
   end
 end

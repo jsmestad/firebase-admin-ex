@@ -21,7 +21,7 @@ defmodule FirebaseAdminEx.Messaging.Message do
 
   @type t :: %__MODULE__{
           data: map(),
-          notification: map(),
+          notification: map() | nil,
           webpush: struct(),
           android: struct(),
           apns: struct(),

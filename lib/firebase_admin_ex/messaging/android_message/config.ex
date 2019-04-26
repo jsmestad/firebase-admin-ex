@@ -12,10 +12,7 @@ defmodule FirebaseAdminEx.Messaging.AndroidMessage.Config do
     ttl: "",
     restricted_package_name: "",
     data: %{},
-    notification: %Notification{
-      title: "",
-      body: ""
-    }
+    notification: nil
   ]
 
   @type t :: %__MODULE__{
@@ -24,7 +21,7 @@ defmodule FirebaseAdminEx.Messaging.AndroidMessage.Config do
           ttl: String.t(),
           restricted_package_name: String.t(),
           data: map(),
-          notification: struct()
+          notification: struct() | nil
         }
 
   @derive Jason.Encoder
@@ -42,8 +39,8 @@ defmodule FirebaseAdminEx.Messaging.AndroidMessage.Config do
     }
   end
 
-  def validate(%__MODULE__{data: _, notification: nil}),
-    do: {:error, "[AndroidMessage.Config] notification is missing"}
+  def validate(%__MODULE__{data: _, notification: nil} = message_config),
+      do: {:ok, message_config}
 
   def validate(%__MODULE__{data: _, notification: notification} = message_config) do
     case Notification.validate(notification) do

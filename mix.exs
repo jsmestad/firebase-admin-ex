@@ -23,8 +23,8 @@ defmodule FirebaseAdminEx.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.4"},
-      {:jason, "~> 1.1.0"},
-      {:goth, "~> 0.11.0"},
+      {:jason, "~> 1.0"},
+      {:goth, "~> 1.1.0"},
       {:ex_doc, "~> 0.18.0", only: :dev, runtime: false}
     ]
   end

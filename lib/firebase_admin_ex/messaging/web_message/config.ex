@@ -9,6 +9,7 @@ defmodule FirebaseAdminEx.Messaging.WebMessage.Config do
   @keys [
     headers: %{},
     data: %{},
+    fcm_options: %{},
     notification: %Notification{
       title: "",
       body: ""
@@ -18,6 +19,7 @@ defmodule FirebaseAdminEx.Messaging.WebMessage.Config do
   @type t :: %__MODULE__{
           headers: map(),
           data: map(),
+          fcm_options: map(),
           notification: struct()
         }
 
@@ -30,6 +32,7 @@ defmodule FirebaseAdminEx.Messaging.WebMessage.Config do
     %__MODULE__{
       headers: Map.get(attributes, :headers, %{}),
       data: Map.get(attributes, :data, %{}),
+      fcm_options: Map.get(attributes, :fcm_options, %{}),
       notification: Notification.new(attributes)
     }
   end

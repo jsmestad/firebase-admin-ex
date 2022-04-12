@@ -28,10 +28,6 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 
-config :firebase_admin_ex,
-  default_options: [
-    timeout: 5000,
-    recv_timeout: 2000
-  ]
+config :tesla, adapter: Tesla.Adapter.Mint
 
 import_config "#{Mix.env()}.exs"

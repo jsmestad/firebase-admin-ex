@@ -1,22 +1,14 @@
 defmodule FirebaseAdminEx.Request do
-  use HTTPoison.Base
+  use Tesla
 
-  @default_headers %{"Content-Type" => "application/json"}
-  @default_options Application.get_env(:firebase_admin_ex, :default_options, [])
+  plug(Tesla.Middleware.JSON)
+  plug(Tesla.Middleware.Headers, [{"content-type", "application/json"}])
 
-  def process_request_headers(headers) when is_map(headers) do
-    @default_headers
-    |> Map.merge(headers)
-    |> Enum.into([])
+  def request!(method, url, body, headers) do
+    request!(method: method, url: url, body: body, headers: Map.to_list(headers))
   end
 
-  def process_request_headers(_), do: @default_headers
-
-  def process_request_body(body) when is_map(body) do
-    Jason.encode!(body)
+  def request(method, url, body, headers) do
+    request(method: method, url: url, body: body, headers: Map.to_list(headers))
   end
-
-  def process_request_body(body), do: body
-
-  def process_request_options(_), do: @default_options
 end

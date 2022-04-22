@@ -6,7 +6,7 @@ defmodule FirebaseAdminEx.RequestMock do
 
   # Private API
   defp successful_response do
-    %HTTPoison.Response{
+    %Tesla.Env{
       body:
         "{\n  \"name\": \"projects/YOUR-FIREBASE-PROJECT-ID/messages/0:1523208634968690%cc9b4facf9fd7ecd\"\n}\n",
       headers: [
@@ -25,9 +25,8 @@ defmodule FirebaseAdminEx.RequestMock do
         {"Vary", "Origin,Accept-Encoding"},
         {"Transfer-Encoding", "chunked"}
       ],
-      request_url:
-        "https://fcm.googleapis.com/v1/projects/YOUR-FIREBASE-PROJECT-ID/messages:send",
-      status_code: 200
+      url: "https://fcm.googleapis.com/v1/projects/YOUR-FIREBASE-PROJECT-ID/messages:send",
+      status: 200
     }
   end
 end

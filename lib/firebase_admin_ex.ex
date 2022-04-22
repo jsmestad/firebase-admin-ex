@@ -1,22 +1,29 @@
 defmodule FirebaseAdminEx do
-  @moduledoc """
-  Documentation for FirebaseAdminEx.
-  """
+  @moduledoc false
   use Application
 
-  # See http://elixir-lang.org/docs/stable/elixir/Application.html
-  # for more information on OTP Applications
   def start(_type, _args) do
-    import Supervisor.Spec, warn: false
-
     children = [
-      # Define workers and child supervisors to be supervised
-      # worker(FirebaseAdminEx.Worker, [arg1, arg2, arg3]),
+      goth_spec()
     ]
 
-    # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: FirebaseAdminEx.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  defp goth_spec do
+    name = FirebaseAdminEx.Goth
+
+    case Application.fetch_env(:firebase_admin_ex, :credentials) do
+      {:ok, credentials} ->
+        source =
+          {:service_account, Jason.decode!(credentials),
+           [scopes: ["https://www.googleapis.com/auth/firebase.messaging"]]}
+
+        {Goth, name: name, source: source}
+
+      :error ->
+        %{id: name, start: {Function, :identity, [:ignore]}}
+    end
   end
 end

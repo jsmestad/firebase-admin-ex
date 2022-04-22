@@ -14,7 +14,7 @@ defmodule FirebaseAdminEx.Messaging do
   @spec send(%Message{}) :: result()
   def send(message) do
     {:ok, project_id} = Goth.Config.get(:project_id)
-    {:ok, token} = Goth.Token.for_scope(@messaging_scope)
+    {:ok, token} = Goth.fetch(@messaging_scope)
 
     send(project_id, token.token, message)
   end
@@ -22,7 +22,7 @@ defmodule FirebaseAdminEx.Messaging do
   @spec send!(%Message{}) :: result!()
   def send!(message) do
     {:ok, project_id} = Goth.Config.get(:project_id)
-    {:ok, token} = Goth.Token.for_scope(@messaging_scope)
+    {:ok, token} = Goth.fetch(@messaging_scope)
 
     send!(project_id, token.token, message)
   end
@@ -35,7 +35,7 @@ defmodule FirebaseAdminEx.Messaging do
   @spec send(String.t(), %Message{}) :: result()
   def send(account, message) do
     {:ok, project_id} = Goth.Config.get(account, :project_id)
-    {:ok, token} = Goth.Token.for_scope({account, @messaging_scope})
+    {:ok, token} = Goth.fetch({account, @messaging_scope})
 
     send(project_id, token.token, message)
   end
@@ -43,7 +43,7 @@ defmodule FirebaseAdminEx.Messaging do
   @spec send!(String.t(), %Message{}) :: result!()
   def send!(account, message) do
     {:ok, project_id} = Goth.Config.get(account, :project_id)
-    {:ok, token} = Goth.Token.for_scope({account, @messaging_scope})
+    {:ok, token} = Goth.fetch({account, @messaging_scope})
 
     send!(project_id, token.token, message)
   end

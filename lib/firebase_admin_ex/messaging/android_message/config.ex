@@ -40,7 +40,7 @@ defmodule FirebaseAdminEx.Messaging.AndroidMessage.Config do
   end
 
   def validate(%__MODULE__{data: _, notification: nil} = message_config),
-      do: {:ok, message_config}
+    do: {:ok, message_config}
 
   def validate(%__MODULE__{data: _, notification: notification} = message_config) do
     case Notification.validate(notification) do

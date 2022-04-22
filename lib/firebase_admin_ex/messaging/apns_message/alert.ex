@@ -19,9 +19,9 @@ defmodule FirebaseAdminEx.Messaging.APNSMessage.Alert do
           title: String.t(),
           body: String.t(),
           "loc-key": String.t(),
-          "loc-args": List.t(),
+          "loc-args": [],
           "title-loc-key": String.t(),
-          "title-loc-args": List.t(),
+          "title-loc-args": [],
           "action-loc-key": String.t(),
           "launch-image": String.t()
         }

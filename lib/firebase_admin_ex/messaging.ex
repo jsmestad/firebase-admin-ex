@@ -3,9 +3,8 @@ defmodule FirebaseAdminEx.Messaging do
   alias FirebaseAdminEx.Messaging.Message
 
   @fcm_endpoint "https://fcm.googleapis.com/v1"
-  @messaging_scope "https://www.googleapis.com/auth/firebase.messaging"
 
-  @type result :: {:ok, term()} | {:error, HTTPoison.Error.t() | Jason.DecodeError.t() | binary()}
+  @type result :: {:ok, term()} | {:error, Tesla.Env.result() | binary()}
   @type result! :: term() | no_return()
 
   @doc """
@@ -14,7 +13,7 @@ defmodule FirebaseAdminEx.Messaging do
   @spec send(%Message{}) :: result()
   def send(message) do
     {:ok, project_id} = Goth.Config.get(:project_id)
-    {:ok, token} = Goth.fetch(@messaging_scope)
+    {:ok, token} = Goth.fetch(FirebaseAdminEx.Goth)
 
     send(project_id, token.token, message)
   end
@@ -22,7 +21,7 @@ defmodule FirebaseAdminEx.Messaging do
   @spec send!(%Message{}) :: result!()
   def send!(message) do
     {:ok, project_id} = Goth.Config.get(:project_id)
-    {:ok, token} = Goth.fetch(@messaging_scope)
+    {:ok, token} = Goth.fetch(FirebaseAdminEx.Goth)
 
     send!(project_id, token.token, message)
   end
@@ -35,7 +34,7 @@ defmodule FirebaseAdminEx.Messaging do
   @spec send(String.t(), %Message{}) :: result()
   def send(account, message) do
     {:ok, project_id} = Goth.Config.get(account, :project_id)
-    {:ok, token} = Goth.fetch({account, @messaging_scope})
+    {:ok, token} = Goth.fetch(FirebaseAdminEx.Goth)
 
     send(project_id, token.token, message)
   end
@@ -43,7 +42,7 @@ defmodule FirebaseAdminEx.Messaging do
   @spec send!(String.t(), %Message{}) :: result!()
   def send!(account, message) do
     {:ok, project_id} = Goth.Config.get(account, :project_id)
-    {:ok, token} = Goth.fetch({account, @messaging_scope})
+    {:ok, token} = Goth.fetch(FirebaseAdminEx.Goth)
 
     send!(project_id, token.token, message)
   end
@@ -67,18 +66,18 @@ defmodule FirebaseAdminEx.Messaging do
   end
 
   defp request(project_id, message, oauth_token) do
-    Request.request(:post, send_url(project_id), %{message: message}, auth_header(oauth_token))
+    oauth_token
+    |> Request.client()
+    |> Request.request(:post, send_url(project_id), %{message: message})
   end
 
   defp request!(project_id, message, oauth_token) do
-    Request.request!(:post, send_url(project_id), %{message: message}, auth_header(oauth_token))
+    oauth_token
+    |> Request.client()
+    |> Request.request!(:post, send_url(project_id), %{message: message})
   end
 
   defp send_url(project_id) do
     "#{@fcm_endpoint}/projects/#{project_id}/messages:send"
-  end
-
-  defp auth_header(oauth_token) do
-    %{"Authorization" => "Bearer #{oauth_token}"}
   end
 end

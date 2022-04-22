@@ -2,7 +2,6 @@ defmodule FirebaseAdminEx.Auth do
   alias FirebaseAdminEx.{Request, Response, Errors}
 
   @auth_endpoint "https://www.googleapis.com/identitytoolkit/v3/relyingparty/"
-  @auth_scope "https://www.googleapis.com/auth/cloud-platform"
 
   @doc """
   Get a user's info by UID
@@ -41,33 +40,19 @@ defmodule FirebaseAdminEx.Auth do
   # import_users
 
   defp do_request(url_suffix, payload, client_email) do
-    with {:ok, response} <-
-           Request.request(
+    with {:ok, token} <- Goth.fetch(FirebaseAdminEx.Goth),
+         {:ok, response} <-
+           token.token
+           |> Request.client()
+           |> Request.request(
              :post,
              @auth_endpoint <> url_suffix,
-             payload,
-             auth_header(client_email)
+             payload
            ),
          {:ok, body} <- Response.parse(response) do
       {:ok, body}
     else
       {:error, error} -> raise Errors.ApiError, Kernel.inspect(error)
     end
-  end
-
-  defp auth_header(nil) do
-    {:ok, token} = Goth.Token.for_scope(@auth_scope)
-
-    do_auth_header(token.token)
-  end
-
-  defp auth_header(client_email) do
-    {:ok, token} = Goth.Token.for_scope({client_email, @auth_scope})
-
-    do_auth_header(token.token)
-  end
-
-  defp do_auth_header(token) do
-    %{"Authorization" => "Bearer #{token}"}
   end
 end

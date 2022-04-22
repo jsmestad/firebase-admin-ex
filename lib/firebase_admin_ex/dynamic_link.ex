@@ -2,7 +2,6 @@ defmodule FirebaseAdminEx.DynamicLink do
   alias FirebaseAdminEx.{Request, Response, Errors}
 
   @short_link_endpoint "https://firebasedynamiclinks.googleapis.com/v1/shortLinks"
-  @auth_scope "https://www.googleapis.com/auth/firebase"
 
   @type suffix_type :: :short | :unguessable
 
@@ -36,12 +35,14 @@ defmodule FirebaseAdminEx.DynamicLink do
   def short_link(params, type \\ :unguessable, client_email \\ nil) do
     payload = build_payload(params, type)
 
-    with {:ok, response} <-
-           Request.request(
+    with {:ok, token} <- Goth.fetch(FirebaseAdminEx.Goth),
+         {:ok, response} <-
+           token.token
+           |> Request.client()
+           |> Request.request(
              :post,
              @short_link_endpoint,
-             payload,
-             auth_header(client_email)
+             payload
            ),
          {:ok, body} <- Response.parse(response),
          {:ok, result} <- Jason.decode(body) do
@@ -67,20 +68,4 @@ defmodule FirebaseAdminEx.DynamicLink do
 
   defp option(:short), do: "SHORT"
   defp option(:unguessable), do: "UNGUESSABLE"
-
-  defp auth_header(nil) do
-    {:ok, token} = Goth.Token.for_scope(@auth_scope)
-
-    do_auth_header(token.token)
-  end
-
-  defp auth_header(client_email) do
-    {:ok, token} = Goth.Token.for_scope({client_email, @auth_scope})
-
-    do_auth_header(token.token)
-  end
-
-  defp do_auth_header(token) do
-    %{"Authorization" => "Bearer #{token}"}
-  end
 end

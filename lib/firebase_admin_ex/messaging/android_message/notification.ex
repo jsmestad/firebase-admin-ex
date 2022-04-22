@@ -27,9 +27,9 @@ defmodule FirebaseAdminEx.Messaging.AndroidMessage.Notification do
           tag: String.t(),
           click_action: String.t(),
           body_loc_key: String.t(),
-          body_loc_args: List.t(),
+          body_loc_args: [],
           title_loc_key: String.t(),
-          title_loc_args: List.t()
+          title_loc_args: []
         }
 
   @derive Jason.Encoder

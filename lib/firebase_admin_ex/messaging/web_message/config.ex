@@ -20,7 +20,7 @@ defmodule FirebaseAdminEx.Messaging.WebMessage.Config do
           headers: map(),
           data: map(),
           fcm_options: map(),
-          notification: struct()
+          notification: Notification.t()
         }
 
   @derive Jason.Encoder

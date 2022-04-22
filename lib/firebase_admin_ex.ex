@@ -18,7 +18,13 @@ defmodule FirebaseAdminEx do
       {:ok, credentials} ->
         source =
           {:service_account, Jason.decode!(credentials),
-           [scopes: ["https://www.googleapis.com/auth/firebase.messaging"]]}
+           [
+             scopes: [
+               "https://www.googleapis.com/auth/firebase.messaging",
+               "https://www.googleapis.com/auth/cloud-platform",
+               "https://www.googleapis.com/auth/firebase"
+             ]
+           ]}
 
         {Goth, name: name, source: source}
 

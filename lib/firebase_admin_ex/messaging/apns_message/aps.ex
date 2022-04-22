@@ -17,7 +17,7 @@ defmodule FirebaseAdminEx.Messaging.APNSMessage.Aps do
 
   @type t :: %__MODULE__{
           alert_string: String.t(),
-          alert: struct(),
+          alert: Alert.t(),
           badge: integer(),
           sound: String.t(),
           category: String.t(),

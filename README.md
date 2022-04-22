@@ -19,7 +19,7 @@ defmodule YourApplication.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:firebase_admin_ex, "~> 0.1.0"}
+      {:firebase_admin_ex, "~> 0.2", git: "https://github.com/jsmestad/firebase-admin-ex"}
     ]
   end
 end
